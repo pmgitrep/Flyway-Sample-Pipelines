@@ -6,7 +6,6 @@ on:
       - main
       
 env:
-
     DOCKER_IMAGE: redgate/flyway
 	SCHEMAS: public
  
