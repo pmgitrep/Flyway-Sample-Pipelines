@@ -1,0 +1,29 @@
+name: Flyway Deploy Prod
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs: 
+  flyway-migrate:
+    runs-on: redgate-runner
+    defaults:
+          run:
+            shell: bash    
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: 'main'
+
+      - name: Flyway Migrate
+        run: flyway migrate 
+                -url= jdbc:snowflake://jdtksou-oz97439.snowflakecomputing.com/?db=MYTESTDB&schema=public
+                -user= pmprateek 
+                -password= VEdM&T5X@zeENr
+                -locations="filesystem:${GITHUB_WORKSPACE}/migrations"
+                -licenseKey=${{ secrets.FLYWAY_LICENSE_KEY }}
+                -baselineOnMigrate=true
+                -errorOverrides=S0001:0:I-
+                -baselineVersion=${{ vars.BASELINE_VERSION }}
+        working-directory: ./migrations
